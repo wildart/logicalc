@@ -1,0 +1,64 @@
+﻿%{
+
+open System.Collections.Generic
+let vars = new Dictionary<string, bool>()
+
+let implies p q = (not p) || q
+
+%}
+
+// The start token becomes a parser function in the compiled code:
+%start start
+
+// Regular tokens
+%token T
+%token F
+%token <string> ID
+%token NEWLINE ASSIGN AND IMPLIES INFER LPAR RPAR
+
+// Misc tokens
+%token EOF
+
+// This is the type of the data produced by a successful reduction of the 'start' symbol:
+%type <bool> start
+
+%%
+
+// These are the rules of the grammar along with the F# code of the
+// actions executed as rules are reduced.
+start: prog EOF {
+    match $1 with
+    | Some v -> (printfn "Result: %s" (if v then "True" else "False"); v)
+    | _ -> false
+}
+
+prog:
+    | prog statement { $2 }
+    | statement      { $1 }
+
+statement:
+    | NEWLINE                   { None }
+    | expr INFER expr NEWLINE   {
+                                    let infer = (not $1) || $3
+                                    printfn "Inference is %scorrect" (if infer then "" else "in" )
+                                    Some infer
+                                }
+    | expr NEWLINE              { Some $1 }
+
+expr:
+    | ID ASSIGN expr { (vars.[$1] <- $3; $3) }
+    | iterm          { $1 }
+
+iterm:
+    | iterm IMPLIES oterm  { implies $1 $3 }
+    | aterm                { $1 }
+
+aterm:
+    | aterm AND var    { $1 && $3 }
+    | var              { $1 }
+
+var:
+    | T                { true }
+    | F                { false }
+    | ID               { vars.[$1] }
+    | LPAR expr RPAR   { $2 }
