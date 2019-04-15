@@ -27,7 +27,7 @@ compile:
 	cp $(LEXYACCLIB) $(OUTPUT)/
 
 run:
-	$(FSHI) $(PROG).fsx
+	$(FSHI) --reference:build/FsLexYacc.Runtime.8.0.1/lib/net46/FsLexYacc.Runtime.dll $(PROG).fsx
 
 pdf:
 	mkdir -p docs

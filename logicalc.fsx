@@ -1,6 +1,4 @@
-﻿#r "build/FsLexYacc.Runtime.8.0.1/lib/net46/FsLexYacc.Runtime.dll"
-
-open FSharp.Text.Lexing
+﻿open FSharp.Text.Lexing
 
 #load "build/logicalc-pars.fs"
 open Parser
