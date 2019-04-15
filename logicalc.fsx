@@ -51,5 +51,21 @@ parse """
     p <=> q |- (p => q) & (q => p)
 """
 
+// Conditional Expression
+parse """
+    (if F then F else T)
+"""
+
+// Conditional Expression
+parse """
+    p = T
+    q = (if p then F else T)
+    r = (if p then F)
+    p = F
+    q = (if p then F else T)
+    r = (if p then F)
+    p
+"""
+
 printfn "Press any key to continue..."
 System.Console.ReadLine() |> ignore

@@ -139,7 +139,7 @@ Implement a token and a grammar rule for a disjunction (logical OR) operation.
 
 1. Use `|` symbol to produce `OR` token in the lexer file `logicalc.fsl`
 2. Add `OR` token to the grammar file `logicalc.fsy`
-3. Write a grammar rule for a disjunction operation, `oterm`, similarly to conjunction (logical AND), look at the above grammar for rule definition.
+3. Write a grammar rule for a disjunction operation, `oterm`, similarly to conjunction (logical AND), see the above grammar for rule definition.
 4. Make sure that implemented rule correctly wired with other grammar rule. See that rule symbols **exactly** match the ones in the above grammar, see `iterm` and `aterm` rules.
 
 ### Material Equivalence Operation
@@ -153,6 +153,22 @@ Implement a token and a grammar rule for a material equivalence operation.
 5. Make sure that implemented rule correctly wired with other grammar rule. See that rule symbols **exactly** match the ones in the above grammar, see `expr` and `iterm` rules.
 
 ### Conditional Expression
+
+Implement necessary tokens and a grammar rules for a conditional statement.
+
+1. Difine tokens `IF`, `THEN` and `ELSE` in the grammar file `logicalc.fsy`
+2. Create necessary tokenizer rules in the lexer file `logicalc.fsl`
+3. Write a grammar rule for a conditional statement (see above grammar for the rule definition). Alternative branch is optional.
+4. Use F# conditional expression evaluate corresponding part of the production rule. If an alternative branch is not provided and a logical condition of the conditional statement is `false` then whole expression is evaluated to `false`.
+5. Make sure that implemented rule correctly wired with other grammar rule.
+
+
+## Extra
+
+- Introduce integer numbers to your interpreter
+    1. Create appropriate regular expression for tokenize numerical literals
+    2. Add necessary productions to the grammar to handle numerical values
+    3. Introduce arithmetic operations to the grammar
 
 ## Links
 
