@@ -50,7 +50,7 @@ expr:
     | iterm          { $1 }
 
 iterm:
-    | iterm IMPLIES oterm  { implies $1 $3 }
+    | iterm IMPLIES aterm  { implies $1 $3 }
     | aterm                { $1 }
 
 aterm:

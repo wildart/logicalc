@@ -20,7 +20,7 @@ let newline = ('\n' | '\r' '\n')
 rule read =
     parse
     | whitespace     { read lexbuf }
-    | newline	     { Parser.NEWLINE }
+    | newline        { Parser.NEWLINE }
     | ['T' 't']      { Parser.T }
     | ['F' 'f']      { Parser.F }
     | '='            { Parser.ASSIGN }

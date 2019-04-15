@@ -7,15 +7,16 @@ SET LEXYACCLIB=bin\FsLexYacc.Runtime.8.0.1\lib\net46\FsLexYacc.Runtime.dll
 
 SET PROG=logicalc
 SET OUTPUT=build
-SET FS_LEXER=%OUTPUT%/%PROG%-lex.fs
-SET FS_PARSER=%OUTPUT%/%PROG%-pars.fs
+SET FS_LEXER=%OUTPUT%\%PROG%-lex.fs
+SET FS_PARSER=%OUTPUT%\%PROG%-pars.fs
 
-rm %OUTPUT%/*
+mkdir %OUTPUT%
+del /q %OUTPUT%\*
 
 %LEX% %PROG%.fsl -o %FS_LEXER% --unicode
 
 %YACC% %PROG%.fsy -v -o %FS_PARSER% --module Parser
-	
+
 rem %FSHC% -r %LEXYACCLIB) --out:build/test.exe %FS_PARSER% %FS_LEXER% Program.fs
 rem copy %LEXYACCLIB% %OUTPUT%\
 
