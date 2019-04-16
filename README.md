@@ -113,6 +113,11 @@ aterm:
      | var              { $1 }
 ```
 
+## Files
+
+- `logicalc.fsl`: contains tokenization rules for a tokenizer (lexical analyzer)
+- `logicalc.fsy`: contains grammar rules for a parser (syntactical analyzer)
+- `logicalc.fsx`: contains test cases for checking correctness of a logical expression interpreter
 
 
 ## First Step
@@ -121,16 +126,18 @@ aterm:
 
 Use to following script files while you work on your parser implementation:
 
-- First, run `build-grammar.bat` script to build parser source code.
-- Next, run `logicalc.bat` script to evaluate an implemented parser with some test cases defined in the test script `logicalc.fsx`.
+- First, run `build-grammar.bat` script to generate and build a parser source code a parser source code for a logical expression interpreter
+- Next, run `logicalc.bat` script to evaluate the generated parser with some test cases defined in the test script file,`logicalc.fsx`
 
 ### Linux
 
-Use `make` command to build parser source code and run `logicalc.fsx` script with various test inputs to check correctness of the parser implementation.
+Use `make` command to build a parser source code for a logical expression interpreter, and run `logicalc.fsx` script with various test inputs to check correctness of the parser implementation.
 
+Additional commands:
+- `make init` install required dependencies
 - `make lex` generates lexer source code from rules in `logicalc.fsl` file
 - `make yacc` generates parser source code from grammar description in `logicalc.fsy` file
-- `make run` runs test script `logicalc.fsx` which evaluates of an implemented parser.
+- `make run` runs test script `logicalc.fsx` which evaluates a generated parser
 
 ## Problems
 
