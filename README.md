@@ -61,23 +61,14 @@ Above grammar uses number of nonterminal and terminal symbols (in capital letter
 
 ## FsLex / FsYacc
 
-For implementing an interpreter based on the above grammar. We'll use `fslex` and `fsyacc` tools.
+For implementing an interpreter based on the above grammar, [fslex](http://fsprojects.github.io/FsLexYacc/fslex.html) and [fsyacc](http://fsprojects.github.io/FsLexYacc/fsyacc.html) will be used.
 
-`fslex` requires a collection of rule
+A lexical analyzer tool, `fslex`, performs a lexem generation for a character input. The lexem generation is guided by a collection of rules defined in `logicalc.fsl` file. These rules match character input to tokes used in grammar through direct character, string or regular expression match.
 
-See file `logicalc.fsy` for implementation of some of above rules. The LHS of the rule (a nonterminal symbol is separated from rule RHS by `:` symbol. Multiple RHS productions separated by `|` symbol.
+Structure of the lexical analyzer tokenization rule closely follows the F# pattern matching expression. Each pattern is a regular expression which matches character or string to a token or some F# expression.
 
-You can find definition of  terminal symbols (tokens) in `logicalc.fsy` file:
-
-```
-%token T
-%token F
-%token <string> ID
-%token NEWLINE ASSIGN AND IMPLIES INFER LPAR RPAR
-```
-
-All terminal symbols needed to be correctly tokenized by `fslex` program.
-Corresponding tokenizer matching rules are located in `logicalc.fsl` file:
+All terminal symbols used in the above grammar needed to be correctly tokenized by `fslex` program, in order to insure the parser's correct work.
+See an example of tokenization rules defined in `logicalc.fsl` file:
 
 ```
 rule read =
@@ -88,17 +79,58 @@ rule read =
     | ['F' 'f']      { Parser.F }
     | '='            { Parser.ASSIGN }
     | '&'            { Parser.AND }
-    | "=>"           { Parser.IMPLIES }
-    | "|-"           { Parser.INFER }
-    | '('            { Parser.LPAR }
-    | ')'            { Parser.RPAR }
     | ['a'-'z']+     { ID( lexem lexbuf ) }
     | _              { failwith ("ParseError: lexem " + lexem lexbuf) }
     | eof   	     { Parser.EOF }
-
 ```
 
-Structure of the lexical analyzer tokenization rule closely follows the F# mattern matching expression. Each pattern is a regular expression which matches character or string to a token or some F# expression.
+Syntax analysis and a parser code generation is performed by `fsyacc` tool.
+`fsyacc` requires a file with a description of grammar terminal symbols (tokens) and rules.
+
+You can find definition of tokens (grammar terminal symbols) in `logicalc.fsy` file:
+
+```
+%token T
+%token F
+%token <string> ID
+%token NEWLINE ASSIGN AND EOF
+```
+
+The file `logicalc.fsy` also contains the implementation of some of above grammar rules. The LHS of the rule (a nonterminal symbol) is separated from rule RHS by `:` symbol. Multiple RHS productions separated by `|` symbol.
+
+So the following BNF rule
+
+```
+aterm ::= aterm AND var
+        | var
+```
+
+is written as
+
+```
+aterm:
+     | aterm AND var    { $1 && $3 }
+     | var              { $1 }
+```
+
+
+
+## First Step
+
+### Windows
+
+Use to following script files while you work on your parser implementation:
+
+- First, run `build-grammar.bat` script to build parser source code.
+- Next, run `logicalc.bat` script to evaluate an implemented parser with some test cases defined in the test script `logicalc.fsx`.
+
+### Linux
+
+Use `make` command to build parser source code and run `logicalc.fsx` script with various test inputs to check correctness of the parser implementation.
+
+- `make lex` generates lexer source code from rules in `logicalc.fsl` file
+- `make yacc` generates parser source code from grammar description in `logicalc.fsy` file
+- `make run` runs test script `logicalc.fsx` which evaluates of an implemented parser.
 
 ## Problems
 
