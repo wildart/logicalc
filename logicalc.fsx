@@ -67,5 +67,5 @@ parse """
     p
 """
 
-printfn "Press any key to continue..."
+printfn "\nALL TESTS PASSED!\n\nPress any key to continue..."
 System.Console.ReadLine() |> ignore

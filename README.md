@@ -11,18 +11,38 @@ You will use `yacc` tool specifically designed to work with F# compiler - `fsyac
 In this lab, you will:
 
 1. Become acquainted with syntax of `yacc`/`lex` tools
-2. Perform compilation of the provided propositional calculus grammar
-3. Use the propositional calculus interpreter to evaluate expressions
-3. Learn to implement additional parsing rules for more propositional calculus operations:
+2. Perform compilation of the provided logical expression grammar
+3. Create the logical expression interpreter to evaluate expressions
+4. Learn to implement additional parsing rules for more logical expression operations:
     - negation (!)
     - disjunction (|)
     - material equivalence (<=>)
     - conditional expression (if ... then ... else ...)
 
 
+## Logical Expression Interpreter
+
+We'll use `fslex/fsyacc` tool to design a parser and create an interpreter of logical expressions. Logical expressions will use boolean values of `T` & `F`
+
+A language for logical expressions has following elements:
+
+- Values: `True` & `False`
+- Boolean algebra operations: OR (`|`), AND (`&`), NEGATION (`!`), IMPLICATION (`=>`)
+- Variables & assignment operations
+- Conditional expressions
+- Parentheses
+
+Examples of logical expression:
+```
+!T & F
+
+(T | F) => T
+```
+
+
 ## Grammar
 
-For our propositional calculus implementation, we use following grammar:
+For our logical expression implementation, we use following grammar:
 
 ```
 start ::= prog
@@ -115,9 +135,9 @@ aterm:
 
 ## Files
 
-- `logicalc.fsl`: contains tokenization rules for a tokenizer (lexical analyzer)
-- `logicalc.fsy`: contains grammar rules for a parser (syntactical analyzer)
-- `logicalc.fsx`: contains test cases for checking correctness of a logical expression interpreter
+- `logicalc.fsl`: this file contains tokenization rules for a tokenizer (lexical analyzer)
+- `logicalc.fsy`: this file contains grammar rules for a parser (syntactical analyzer)
+- `logicalc.fsx`: this script file contains test cases for checking correctness of a logical expression interpreter parser
 
 
 ## First Step
@@ -126,8 +146,8 @@ aterm:
 
 Use to following script files while you work on your parser implementation:
 
-- First, run `build-grammar.bat` script to generate and build a parser source code a parser source code for a logical expression interpreter
-- Next, run `logicalc.bat` script to evaluate the generated parser with some test cases defined in the test script file,`logicalc.fsx`
+- First, run `build-grammar.bat` batch file to generate and build a parser source code a parser source code for a logical expression interpreter
+- Next, run `logicalc.bat` batch file to evaluate the generated parser with some test cases defined in the test script file,`logicalc.fsx`
 
 ### Linux
 
@@ -139,37 +159,57 @@ Additional commands:
 - `make yacc` generates parser source code from grammar description in `logicalc.fsy` file
 - `make run` runs test script `logicalc.fsx` which evaluates a generated parser
 
+
 ## Problems
 
-Now you implement missing operations and expressions from the above propositional calculus grammar.
+You need to implement missing operations and expressions from the above logical expression grammar.
 
 ### Negation Operation
 
-For negation operation, first, you need to implement a negation token and associated lexem processing
+First time, you run the test script `logicalc.fsx` file, it stops with the following error:
 
-1. Add following tokenization rule to `logicalc.fsl` file:
+```
+Evaluate:
+
+    p = F
+    q = F
+    (p => q) & !q |- !p
+
+System.Exception: ParseError: no rule for lexem !
+  at (wrapper managed-to-native) System.Reflection.MonoMethod.InternalInvoke(System.Reflection.MonoMethod,object,object[],System.Exception&)
+  at System.Reflection.MonoMethod.Invoke (System.Object obj, System.Reflection.BindingFlags invokeAttr, System.Reflection.Binder binder, System.Object[] parameters, System.Globalization.CultureInfo culture) [0x0006a] in <6649516e5b3542319fb262b421af0adb>:0
+Stopped due to error
+```
+
+The error message ` ParseError: no rule for lexem !` suggests that lexem `!` cannot be processed by the lexer. The `!` symbol corresponds to a unary boolean negation operation.
+
+In order to implement the negation operation, you are required to define a negation token and corresponding lexem processing rules:
+
+1. Add the following tokenization rule to `logicalc.fsl` file:
 
 ```
     | '!'    { Parser.NOT }
 ```
 
-Similar to pattern matching rules, `!` is matched to the token `NOT` which listed in curly brackets.
+Similar to F# pattern matching rules, `!` is matched to the token `NOT` which is specified in curly brackets.
 
-2. In `logicalc.fsy`, add token definition to the other tokens:
+2. In `logicalc.fsy`, add the following token definition to the other tokens:
 
 ```
 %token NOT
 ```
 
-3. In `logicalc.fsy`, find the `var` grammar rule and add a production for the negation operation to it:
+3. In `logicalc.fsy`, find the `var` grammar rule and add the following production of the negation operation to it:
 
 ```
     | NOT var          { not $2 }
 ```
 
-Grammar rules definition follow BNF notation. Rule LHS separated from RHS by `:` symbol. RHS parts of the grammar rule are stared with a bar `|` symbol.
+4. Run test script to verify correctness of the operation implementation.
+
+**Note:** Grammar rules follow BNF notation. Rule LHS separated from RHS by `:` symbol. RHS parts of the grammar rule are stared with a bar `|` symbol.
 Curly brackets contain a valid F# code that will be executed when expression is matched.
-In above negation production of `var` rule, `$2` in curly braces references to the second symbol in rule which is a nonterminal `var` and is evaluated to a current state of this symbol during parsing.
+In above negation production of `var` rule, `$2` in curly brackets references to the second symbol in rule which is a nonterminal `var` and is evaluated to a current state of this symbol during parsing.
 
 
 ### Disjunction Operation
@@ -180,6 +220,7 @@ Implement a token and a grammar rule for a disjunction (logical OR) operation.
 2. Add `OR` token to the grammar file `logicalc.fsy`
 3. Write a grammar rule for a disjunction operation, `oterm`, similarly to conjunction (logical AND), see the above grammar for rule definition.
 4. Make sure that implemented rule correctly wired with other grammar rule. See that rule symbols **exactly** match the ones in the above grammar, see `iterm` and `aterm` rules.
+5. Run test script to verify correctness of the operation implementation.
 
 ### Material Equivalence Operation
 
@@ -190,6 +231,7 @@ Implement a token and a grammar rule for a material equivalence operation.
 3. Write a grammar rule for a material equivalence operation, `mterm`, similarly to implication, look at the above grammar for rule definition.
 4. Use following definition of a material equivalence `(p => q) & (q => p)` for implementation of the rule code segment.
 5. Make sure that implemented rule correctly wired with other grammar rule. See that rule symbols **exactly** match the ones in the above grammar, see `expr` and `iterm` rules.
+6. Run test script to verify correctness of the operation implementation.
 
 ### Conditional Expression
 
@@ -200,6 +242,7 @@ Implement necessary tokens and a grammar rules for a conditional statement.
 3. Write a grammar rule for a conditional statement (see above grammar for the rule definition). Alternative branch is optional.
 4. Use F# conditional expression evaluate corresponding part of the production rule. If an alternative branch is not provided and a logical condition of the conditional statement is `false` then whole expression is evaluated to `false`.
 5. Make sure that implemented rule correctly wired with other grammar rule.
+6. Run test script to verify correctness of the expression implementation.
 
 
 ## Extra
@@ -208,6 +251,7 @@ Implement necessary tokens and a grammar rules for a conditional statement.
     1. Create appropriate regular expression for tokenize numerical literals
     2. Add necessary productions to the grammar to handle numerical values
     3. Introduce arithmetic operations to the grammar
+
 
 ## Links
 

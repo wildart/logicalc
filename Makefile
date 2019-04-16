@@ -17,9 +17,17 @@ init:
 	nuget restore -OutputDirectory $(OUTPUT)
 
 lex:
+	@echo
+	@echo '======================='
+	@echo ' Generating lexer code '
+	@echo '======================='
 	$(LEX) $(PROG).fsl -o $(FS_LEXER) --unicode
 
 yacc:
+	@echo
+	@echo '========================'
+	@echo ' Generating parser code '
+	@echo '========================'
 	$(YACC) $(PROG).fsy -v -o $(FS_PARSER) --module Parser
 
 compile:
@@ -27,6 +35,10 @@ compile:
 	cp $(LEXYACCLIB) $(OUTPUT)/
 
 run:
+	@echo
+	@echo '======================'
+	@echo ' Running parser tests '
+	@echo '======================'
 	$(FSHI) --reference:build/FsLexYacc.Runtime.8.0.1/lib/net46/FsLexYacc.Runtime.dll $(PROG).fsx
 
 pdf:
