@@ -22,14 +22,14 @@ In this lab, you will:
 
 ## Logical Expression Interpreter
 
-We'll use `fslex/fsyacc` tool to design a parser and create an interpreter of logical expressions. Logical expressions will use boolean values of `T` & `F`
+We'll use `fslex/fsyacc` tool to design a parser and create an interpreter of logical expressions.
 
 A language for logical expressions has following elements:
 
-- Values: `True` & `False`
-- Boolean algebra operations: OR (`|`), AND (`&`), NEGATION (`!`), IMPLICATION (`=>`)
-- Variables & assignment operations
-- Conditional expressions
+- Values: True (`T`) and False (`F`)
+- Boolean algebra operations: OR (`|`), AND (`&`), NOT (`!`), IMPLICATION (`=>`)
+- Variables & assignment operation (`=`)
+- Conditional expressions (`if ... then ... else ...`)
 - Parentheses
 
 Examples of logical expression:
@@ -37,12 +37,13 @@ Examples of logical expression:
 !T & F
 
 (T | F) => T
+
+if T then (T || F) else F
 ```
 
+### Grammar
 
-## Grammar
-
-For our logical expression implementation, we use following grammar:
+We use following grammar for a logical expression language:
 
 ```
 start ::= prog
@@ -77,7 +78,7 @@ var   ::= T
         | LPAR IF var THEN expr ELSE expr RPAR
         | LPAR IF var THEN expr RPAR
 ```
-Above grammar uses number of nonterminal and terminal symbols (in capital letters).
+Above grammar BFN rules specify nonterminal symbols in lower case letters and terminal symbols in capital letters.
 
 ## FsLex / FsYacc
 
@@ -181,7 +182,7 @@ System.Exception: ParseError: no rule for lexem !
 Stopped due to error
 ```
 
-The error message ` ParseError: no rule for lexem !` suggests that lexem `!` cannot be processed by the lexer. The `!` symbol corresponds to a unary boolean negation operation.
+The error message ` ParseError: no rule for lexem !` suggests that lexem `!` cannot be processed by the lexer. The `!` symbol corresponds to a unary boolean negation operation which is not implemented.
 
 In order to implement the negation operation, you are required to define a negation token and corresponding lexem processing rules:
 

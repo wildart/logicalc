@@ -13,8 +13,16 @@ SET FS_PARSER=%OUTPUT%\%PROG%-pars.fs
 mkdir %OUTPUT%
 del /q %OUTPUT%\*
 
+echo ""
+echo "======================="
+echo " Generating lexer code "
+echo "======================="
 %LEX% %PROG%.fsl -o %FS_LEXER% --unicode
 
+echo ""
+echo "========================"
+echo " Generating parser code "
+echo "========================"
 %YACC% %PROG%.fsy -v -o %FS_PARSER% --module Parser
 
 rem %FSHC% -r %LEXYACCLIB) --out:build/test.exe %FS_PARSER% %FS_LEXER% Program.fs
