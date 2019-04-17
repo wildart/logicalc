@@ -18,6 +18,9 @@ In this lab, you will:
     - disjunction (|)
     - material equivalence (<=>)
     - conditional expression (if ... then ... else ...)
+    - numerical literals
+        - relational operations
+        - arithmetical operations (optional)
 
 
 ## Logical Expression Interpreter
