@@ -219,8 +219,8 @@ Implement a token and a grammar rule for a disjunction (logical OR) operation.
 
 1. Use `|` symbol to produce `OR` token in the lexer file `logicalc.fsl`
 2. Add `OR` token to the grammar file `logicalc.fsy`
-3. Write a grammar rule for a disjunction operation, `oterm`, similarly to conjunction (logical AND), see the above grammar for rule definition.
-4. Make sure that implemented rule correctly wired with other grammar rule. See that rule symbols **exactly** match the ones in the above grammar, see `iterm` and `aterm` rules.
+3. In the grammar file `logicalc.fsy`, write a rule for a disjunction (logical OR) operation, `oterm`, similarly to conjunction (logical AND), see the above grammar for rule definition.
+4. Make sure that implemented rule correctly wired with other grammar rules. See that rule symbols **exactly** match the ones in the above grammar, see `iterm` and `aterm` rules.
 5. Run test script to verify correctness of the operation implementation.
 
 ### Material Equivalence Operation
@@ -229,9 +229,9 @@ Implement a token and a grammar rule for a material equivalence operation.
 
 1. Use `<=>` symbol combination to produce `MATEQ` token in the lexer file `logicalc.fsl`
 2. Add `MATEQ` token to the grammar file `logicalc.fsy`
-3. Write a grammar rule for a material equivalence operation, `mterm`, similarly to implication, look at the above grammar for rule definition.
+3. In the grammar file `logicalc.fsy`, write a rule for a material equivalence operation, `mterm`, similarly to implication, look at the above grammar for rule definition.
 4. Use following definition of a material equivalence `(p => q) & (q => p)` for implementation of the rule code segment.
-5. Make sure that implemented rule correctly wired with other grammar rule. See that rule symbols **exactly** match the ones in the above grammar, see `expr` and `iterm` rules.
+5. Make sure that implemented rule correctly wired with other grammar rules. See that rule symbols **exactly** match the ones in the above grammar, see `expr` and `iterm` rules.
 6. Run test script to verify correctness of the operation implementation.
 
 ### Conditional Expression
@@ -240,9 +240,9 @@ Implement necessary tokens and a grammar rules for a conditional statement.
 
 1. Difine tokens `IF`, `THEN` and `ELSE` in the grammar file `logicalc.fsy`
 2. Create necessary tokenizer rules in the lexer file `logicalc.fsl`
-3. Write a grammar rule for a conditional statement (see above grammar for the rule definition). Alternative branch is optional.
+3. In the grammar file `logicalc.fsy`, write a rule for a conditional statement (see above grammar for the rule definition). Alternative branch is optional.
 4. Use F# conditional expression evaluate corresponding part of the production rule. If an alternative branch is not provided and a logical condition of the conditional statement is `false` then whole expression is evaluated to `false`.
-5. Make sure that implemented rule correctly wired with other grammar rule.
+5. Make sure that implemented rule correctly wired with other grammar rules.
 6. Run test script to verify correctness of the expression implementation.
 
 
