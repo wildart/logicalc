@@ -46,7 +46,7 @@ if T then (T || F) else F
 We use following grammar for a logical expression language:
 
 ```
-start ::= prog
+start ::= prog EOF
 
 prog  ::= prog stmnt
         | stmnt
@@ -134,6 +134,19 @@ aterm:
      | var              { $1 }
 ```
 
+### Semantic Actions
+
+A semantic action is a piece of F# code that is executed in order to assign
+a semantic value to the nonterminal symbol with which this production group is associated.
+A semantic action can refer to the (already computed) semantic values of
+the terminal or nonterminal symbols that appear in the production via the semantic value identifiers bound by the production.
+
+Semantic actions can refer to unnamed semantic values via positional keywords of the form \$1, \$2, etc. See above example of the logical AND rule, `aterm`,
+where the semantic action is defined in curly brackets as `{ $1 && $3 }`.
+The meaning of this semantic action is an actual logical AND operation between values of nonterminal symbols `aterm` and `var` written in form
+of the proper [F# boolean operation](https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/symbol-and-operator-reference/boolean-operators).
+
+
 ## Files
 
 - `logicalc.fsl`: this file contains tokenization rules for a tokenizer (lexical analyzer)
@@ -220,8 +233,9 @@ Implement a token and a grammar rule for a disjunction (logical OR) operation.
 1. Use `|` symbol to produce `OR` token in the lexer file `logicalc.fsl`
 2. Add `OR` token to the grammar file `logicalc.fsy`
 3. In the grammar file `logicalc.fsy`, write a rule for a disjunction (logical OR) operation, `oterm`, similarly to conjunction (logical AND), see the above grammar for rule definition.
-4. Make sure that implemented rule correctly wired with other grammar rules. See that rule symbols **exactly** match the ones in the above grammar, see `iterm` and `aterm` rules.
-5. Run test script to verify correctness of the operation implementation.
+4. Add appropriate semantic actions to the added rule.
+5. Make sure that implemented rule correctly wired with other grammar rules. See that rule symbols **exactly** match the ones in the above grammar, see `iterm` and `aterm` rules.
+6. Run test script to verify correctness of the operation implementation.
 
 ### Material Equivalence Operation
 
@@ -230,7 +244,7 @@ Implement a token and a grammar rule for a material equivalence operation.
 1. Use `<=>` symbol combination to produce `MATEQ` token in the lexer file `logicalc.fsl`
 2. Add `MATEQ` token to the grammar file `logicalc.fsy`
 3. In the grammar file `logicalc.fsy`, write a rule for a material equivalence operation, `mterm`, similarly to implication, look at the above grammar for rule definition.
-4. Use following definition of a material equivalence `(p => q) & (q => p)` for implementation of the rule code segment.
+4. Use following definition of a material equivalence `(p => q) & (q => p)` for implementation of the rule semantic action.
 5. Make sure that implemented rule correctly wired with other grammar rules. See that rule symbols **exactly** match the ones in the above grammar, see `expr` and `iterm` rules.
 6. Run test script to verify correctness of the operation implementation.
 
@@ -241,7 +255,7 @@ Implement necessary tokens and a grammar rules for a conditional statement.
 1. Difine tokens `IF`, `THEN` and `ELSE` in the grammar file `logicalc.fsy`
 2. Create necessary tokenizer rules in the lexer file `logicalc.fsl`
 3. In the grammar file `logicalc.fsy`, write a rule for a conditional statement (see above grammar for the rule definition). Alternative branch is optional.
-4. Use F# conditional expression evaluate corresponding part of the production rule. If an alternative branch is not provided and a logical condition of the conditional statement is `false` then whole expression is evaluated to `false`.
+4. Implement rule semantic actions using the F# conditional expression evaluate for corresponding part of the production rule. If an alternative branch is not provided and a logical condition of the conditional statement is `false` then whole expression is evaluated to `false`.
 5. Make sure that implemented rule correctly wired with other grammar rules.
 6. Run test script to verify correctness of the expression implementation.
 
