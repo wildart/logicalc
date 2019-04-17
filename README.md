@@ -139,11 +139,14 @@ aterm:
 A semantic action is a piece of F# code that is executed in order to assign
 a semantic value to the nonterminal symbol with which this production group is associated.
 A semantic action can refer to the (already computed) semantic values of
-the terminal or nonterminal symbols that appear in the production via the semantic value identifiers bound by the production.
+the terminal or nonterminal symbols that appear in the production via the semantic
+value identifiers bound by the production.
 
-Semantic actions can refer to unnamed semantic values via positional keywords of the form \$1, \$2, etc. See above example of the logical AND rule, `aterm`,
+Semantic actions can refer to unnamed semantic values via positional keywords of
+the form \$1, \$2, etc. See above example of the logical AND rule, `aterm`,
 where the semantic action is defined in curly brackets as `{ $1 && $3 }`.
-The meaning of this semantic action is an actual logical AND operation between values of nonterminal symbols `aterm` and `var` written in form
+The meaning of this semantic action is an actual logical AND operation between
+values of nonterminal symbols `aterm` and `var` written in form
 of the proper [F# boolean operation](https://docs.microsoft.com/en-us/dotnet/fsharp/language-reference/symbol-and-operator-reference/boolean-operators).
 
 
@@ -223,17 +226,21 @@ Similar to F# pattern matching rules, `!` is matched to the token `NOT` which is
 
 **Note:** Grammar rules follow BNF notation. Rule LHS separated from RHS by `:` symbol. RHS parts of the grammar rule are stared with a bar `|` symbol.
 Curly brackets contain a valid F# code that will be executed when expression is matched.
-In above negation production of `var` rule, `$2` in curly brackets references to the second symbol in rule which is a nonterminal `var` and is evaluated to a current state of this symbol during parsing.
+
+In above negation production of `var` rule, the curly brackets designate semantic
+action associated with this production, and `$2` in it references to the second
+symbol in it, a nonterminal `var`. When this production is matched during
+the expression parsing, the corresponding semantic action is evaluated, all its reverences are matched to corresponding values of the symbols in the production.
 
 
 ### Disjunction Operation
 
 Implement a token and a grammar rule for a disjunction (logical OR) operation.
 
-1. Use `|` symbol to produce `OR` token in the lexer file `logicalc.fsl`
-2. Add `OR` token to the grammar file `logicalc.fsy`
+1. Use `|` symbol to produce `OR` token in the lexer file `logicalc.fsl`.
+2. Add `OR` token to the grammar file `logicalc.fsy`.
 3. In the grammar file `logicalc.fsy`, write a rule for a disjunction (logical OR) operation, `oterm`, similarly to conjunction (logical AND), see the above grammar for rule definition.
-4. Add appropriate semantic actions to the added rule.
+4. Add appropriate semantic actions to the added rule, i.e. performing disjunction operation of two boolean values.
 5. Make sure that implemented rule correctly wired with other grammar rules. See that rule symbols **exactly** match the ones in the above grammar, see `iterm` and `aterm` rules.
 6. Run test script to verify correctness of the operation implementation.
 
@@ -241,8 +248,8 @@ Implement a token and a grammar rule for a disjunction (logical OR) operation.
 
 Implement a token and a grammar rule for a material equivalence operation.
 
-1. Use `<=>` symbol combination to produce `MATEQ` token in the lexer file `logicalc.fsl`
-2. Add `MATEQ` token to the grammar file `logicalc.fsy`
+1. Use `<=>` symbol combination to produce `MATEQ` token in the lexer file `logicalc.fsl`.
+2. Add `MATEQ` token to the grammar file `logicalc.fsy`.
 3. In the grammar file `logicalc.fsy`, write a rule for a material equivalence operation, `mterm`, similarly to implication, look at the above grammar for rule definition.
 4. Use following definition of a material equivalence `(p => q) & (q => p)` for implementation of the rule semantic action.
 5. Make sure that implemented rule correctly wired with other grammar rules. See that rule symbols **exactly** match the ones in the above grammar, see `expr` and `iterm` rules.
@@ -252,20 +259,63 @@ Implement a token and a grammar rule for a material equivalence operation.
 
 Implement necessary tokens and a grammar rules for a conditional statement.
 
-1. Difine tokens `IF`, `THEN` and `ELSE` in the grammar file `logicalc.fsy`
-2. Create necessary tokenizer rules in the lexer file `logicalc.fsl`
+1. Define tokens `IF`, `THEN` and `ELSE` in the grammar file `logicalc.fsy`.
+2. Create necessary tokenizer rules in the lexer file `logicalc.fsl`.
 3. In the grammar file `logicalc.fsy`, write a rule for a conditional statement (see above grammar for the rule definition). Alternative branch is optional.
 4. Implement rule semantic actions using the F# conditional expression evaluate for corresponding part of the production rule. If an alternative branch is not provided and a logical condition of the conditional statement is `false` then whole expression is evaluated to `false`.
 5. Make sure that implemented rule correctly wired with other grammar rules.
 6. Run test script to verify correctness of the expression implementation.
 
+## Numerical Literals
+
+An above logical expression language only works with a Boolean values. We will
+introduce numerical literals to the language.
+
+A numerical literal is an integer number of various length. For correct integration of numerical literals into the logical expressions language, the numerical literal can only appear as a part of some relational operation.
+
+### Numerical Literal Token
+
+1. Define a numerical literal token in the grammar file `logicalc.fsy`
+    - Create a token `NUM` that has an integer type, `int`
+
+2. Define a lexer rule to process numerical literals in the lexer file `logicalc.fsl`
+    - Create a regular expression that matches arbitrary sequence of numbers
+    - Generate a corresponding token that would contain a value of the matched numerical literal.
+        - See `ID` token implementation for the reference.
+
+### Numerical Equality
+
+Numerical equality is a relational expression that has as operands numerical literals.  A corresponding grammar rule for the numerical equality must be added
+to the logical expression language:
+
+```
+relop ::= NUM NUMEQ NUM
+```
+
+Now this rule has to be correctly wired with other grammar rules to ensure that
+relational operation is a part of logical expression, in particular the expression rule, `expr`, must be modified.
+
+In the grammar file `logicalc.fsy`:
+
+1. Add the above numerical equality rule.
+2. Write a semantic action for this rule that performs checks equality of numerical operands of the numerical equality operation.
+3. Change `expr` rule to include relational operation production, and inclue appropriate semantic action.
+
+
+### Other Relational Operators
+
+1. Define tokens and lexer rules for other numerical operations
+
+2. Extend relational operation `relop` rule to include more productions for other relational operations: inequality (`!=`) and ordering operations (`<`, `>`)
+
+3. Add appropriate semantic actions to the new rules.
+
 
 ## Extra
 
-- Introduce integer numbers to your interpreter
-    1. Create appropriate regular expression for tokenize numerical literals
-    2. Add necessary productions to the grammar to handle numerical values
-    3. Introduce arithmetic operations to the grammar
+- Introduce arithmetic operations on numerical literals to the logical expression language
+    - Arithmetic operations can be viewed as expressions with numerical literals
+    - Define new numerical expression rule, and use it everywhere where the numerical literals where used
 
 
 ## Links

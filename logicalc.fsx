@@ -67,5 +67,15 @@ parse """
     p
 """
 
+// Numerical literals and equality
+parse """
+    (1 == 1)
+"""
+
+// Other relational operations
+parse """
+    (1113 > 1) & (19823 != 1)
+"""
+
 printfn "\nALL TESTS PASSED!\n\nPress any key to continue..."
 System.Console.ReadLine() |> ignore
