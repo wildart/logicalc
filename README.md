@@ -180,11 +180,11 @@ Additional commands:
 - `make run` runs test script `logicalc.fsx` which evaluates a generated parser
 
 
-## Problems
+## Problems [50 points]
 
 You need to implement missing operations and expressions from the above logical expression grammar.
 
-### Negation Operation
+### Negation Operation [5 points]
 
 First time, you run the test script `logicalc.fsx` file, it stops with the following error:
 
@@ -236,7 +236,7 @@ symbol in it, a nonterminal `var`. When this production is matched during
 the expression parsing, the corresponding semantic action is evaluated, all its reverences are matched to corresponding values of the symbols in the production.
 
 
-### Disjunction Operation
+### Disjunction Operation [10 points]
 
 Implement a token and a grammar rule for a disjunction (logical OR) operation.
 
@@ -247,7 +247,7 @@ Implement a token and a grammar rule for a disjunction (logical OR) operation.
 5. Make sure that implemented rule correctly wired with other grammar rules. See that rule symbols **exactly** match the ones in the above grammar, see `iterm` and `aterm` rules.
 6. Run test script to verify correctness of the operation implementation.
 
-### Material Equivalence Operation
+### Material Equivalence Operation [10 points]
 
 Implement a token and a grammar rule for a material equivalence operation.
 
@@ -258,7 +258,7 @@ Implement a token and a grammar rule for a material equivalence operation.
 5. Make sure that implemented rule correctly wired with other grammar rules. See that rule symbols **exactly** match the ones in the above grammar, see `expr` and `iterm` rules.
 6. Run test script to verify correctness of the operation implementation.
 
-### Conditional Expression
+### Conditional Expression [10 points]
 
 Implement necessary tokens and a grammar rules for a conditional statement.
 
@@ -269,14 +269,14 @@ Implement necessary tokens and a grammar rules for a conditional statement.
 5. Make sure that implemented rule correctly wired with other grammar rules.
 6. Run test script to verify correctness of the expression implementation.
 
-## Numerical Literals
+### Numerical Literals [15 points]
 
 An above logical expression language only works with a Boolean values. We will
 introduce numerical literals to the language.
 
 A numerical literal is an integer number of various length. For correct integration of numerical literals into the logical expressions language, the numerical literal can only appear as a part of some relational operation.
 
-### Numerical Literal Token
+#### Numerical Literal Token
 
 1. Define a numerical literal token in the grammar file `logicalc.fsy`
     - Create a token `NUM` that has an integer type, `int`
@@ -285,27 +285,35 @@ A numerical literal is an integer number of various length. For correct integrat
     - Create a regular expression that matches arbitrary sequence of numbers
     - Generate a corresponding token that would contain a value of the matched numerical literal.
         - See `ID` token implementation for the reference.
+        - Make sure to convert matched string literal to a integer value, use `int` function.
 
-### Numerical Equality
+#### Numerical Equality
 
-Numerical equality is a relational expression that has as operands numerical literals.  A corresponding grammar rule for the numerical equality must be added
-to the logical expression language:
+Numerical equality is a relational expression that has as operands numerical literals.
+A corresponding grammar rule for the numerical equality must be added to
+the logical expression language:
 
 ```
 relop ::= NUM NUMEQ NUM
 ```
 
 Now this rule has to be correctly wired with other grammar rules to ensure that
-relational operation is a part of logical expression, in particular the expression rule, `expr`, must be modified.
+relational operation is a part of logical expression, in particular the expression rule,
+`expr`, must be modified.
+
+In the grammar file `logicalc.fsi`:
+
+1. Write a rule to match `==` to a `NUMEQ` token.
 
 In the grammar file `logicalc.fsy`:
 
+1. Add new `NUMEQ` token.
 1. Add the above numerical equality rule.
 2. Write a semantic action for this rule that performs checks equality of numerical operands of the numerical equality operation.
-3. Change `expr` rule to include relational operation production, and inclue appropriate semantic action.
+3. Change `expr` rule to include relational operation production, and include appropriate semantic action.
 
 
-### Other Relational Operators
+#### Other Relational Operators
 
 1. Define tokens and lexer rules for other numerical operations
 
@@ -316,9 +324,9 @@ In the grammar file `logicalc.fsy`:
 
 ## Extra
 
-- Introduce arithmetic operations on numerical literals to the logical expression language
-    - Arithmetic operations can be viewed as expressions with numerical literals
-    - Define new numerical expression rule, and use it everywhere where the numerical literals where used
+- Introduce arithmetic operations on numerical literals to the logical expression language:
+    - Arithmetic operations can be viewed as expressions with numerical literals.
+    - Define new numerical expression rule, and use it everywhere where the numerical literals where used.
 
 
 ## Links
